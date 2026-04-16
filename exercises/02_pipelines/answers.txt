@@ -1,0 +1,88 @@
+======================================================================
+  ANSWERS: Exercise 2 - Pipelines & Redirection
+======================================================================
+
+1.  ls data/ | wc -l
+
+2.  tail -n +2 data/mtcars.csv | sort -t ',' -k 3 -n -r
+
+3.  tail -n +2 data/fruits.csv | cut -d ',' -f 1
+
+4.  tail -n +2 data/fruits.csv | sort -t ',' -k 2 -n -r | head -n 1
+    (should be cherry,100,3.00)
+
+5.  cat data/a3.txt | sort | uniq -c
+
+6.  cat data/mtcars.csv | awk -F ',' '{ if ($10 == "1") {print $0} }'
+
+7.  cat data/mtcars.csv | awk -F ',' '{ if ($3 == "8") {print $0} }' | wc -l
+    (should be 14)
+
+8.  stdin  = 0 = standard input
+    stdout = 1 = standard output
+    stderr = 2 = standard error (diagnostics)
+
+9.  ls data/ > listing.txt
+    cat listing.txt
+
+10. echo "--- end of listing ---" >> listing.txt
+    cat listing.txt
+
+11. >   OVERWRITES the file (creates it if it doesn't exist)
+    >>  APPENDS to the file (creates it if it doesn't exist)
+
+12. fakecmd 2> errors.txt
+    cat errors.txt    # shows the "command not found" error
+
+13. 1>&2 redirects stdout (1) to go where stderr (2) goes.
+    Used in scripts to write error/usage messages to stderr
+    so they don't get mixed into stdout pipeline data.
+    Example: echo "usage: $0 <arg>" 1>&2
+
+14. bc -l <<< "4 * a(1)"
+    (prints 3.14159265358979323844)
+
+15. Output is discarded silently. /dev/null is used when you
+    want to run a command for its side effects but don't care
+    about its output (e.g., suppress noisy warnings).
+
+16. while read name height weight major; do
+      echo "$name studies $major"
+    done < data/students.txt
+
+    NOTE: The header line gets read too! "Name" becomes name,
+    "Height" becomes height, etc. In real scripts you'd skip
+    the header with tail -n +2 first, piping it in.
+    Also: the LAST variable (major) gets ALL remaining words.
+
+17. tail -n +2 data/mtcars.csv | cut -d ',' -f 7
+
+18. sed 's/awestruck/lovestruck/' data/a3.txt
+
+19. cut -d ' ' -f 1 data/emails.txt
+
+20. cut -d ' ' -f 3 data/emails.txt | sort | uniq -c
+    (should show count of active and inactive)
+
+21. tail -n +2 data/fruits.csv | cut -d ',' -f 2 | {
+      sum=0
+      while read n; do
+        sum=$(($sum + $n))
+      done
+      echo "Total: $sum"
+    }
+    (answer: 330)
+
+    NOTE: The space in "{ " is REQUIRED.
+    The ";" before "}" is REQUIRED.
+
+22. tail -n +2 data/fruits.csv | sort -t ',' -k 3 -n
+
+23. tail -n +2 data/fruits.csv | sort -t ',' -k 1
+
+24. Without -n, sort uses LEXICOGRAPHIC (dictionary) order:
+      echo -e "9\n10\n2\n100" | sort     -->  10, 100, 2, 9
+      echo -e "9\n10\n2\n100" | sort -n  -->  2, 9, 10, 100
+    Lexicographic: "10" < "2" because "1" < "2" character-by-character.
+    Numeric: 2 < 10 because the actual number is smaller.
+    ALWAYS use -n when sorting numbers!

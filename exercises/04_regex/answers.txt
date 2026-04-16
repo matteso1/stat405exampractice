@@ -1,0 +1,97 @@
+======================================================================
+  ANSWERS: Exercise 4 - Regular Expressions
+======================================================================
+
+--- PART A ---
+
+1.  "wisc" - matches in every line (all emails have wisc.edu)
+2.  "." matches ANY char, so ".," matches any char followed by comma
+    Matches: n, in "Brown,"; s, in "Roukos,"; n, in "Chen,"; r, in "Juniper,"
+3.  ^[A-Z] - uppercase letter at START of line. Matches B, R, C, J
+4.  [aeiou] - matches every vowel in every line
+5.  [^aeiou] - matches every NON-vowel character
+6.  [0-9]{4} - four consecutive digits. Matches in each ID number
+    (e.g., "1234", "5678" in 123456789, etc.)
+7.  @.*\.edu - @ then anything then .edu. Matches the email domain.
+8.  ^J - lines starting with J. Matches: Juniper,Jack line
+
+--- PART B ---
+
+9.  .         any single character (except newline)
+10. [...]     character set, matches any ONE character inside
+11. [^...]    NEGATED character set, matches any char NOT inside
+12. ^         beginning of line
+13. $         end of line
+14. \<        beginning of a word
+15. \>        end of a word
+16. \{n\}     exactly n repetitions of previous expression
+17. \{n,m\}   n to m repetitions
+18. *         zero or more (shorthand for \{0,\})
+19. +         one or more (shorthand for \{1,\})
+20. ?         zero or one (shorthand for \{0,1\})
+21. \|        OR (alternation)
+22. \(...\)   grouping (capture group for backreference)
+23. \1        backreference to what first \(...\) matched
+
+--- PART C ---
+
+24. ^C
+25. [a-z]+@wisc\.edu
+26. [0-9]{9}    (emacs: [0-9]\{9\})
+27. emacs: \([a-z]\)\1    grep -E: ([a-z])\1
+    Matches: "ll" in Sally, "ll" in jgillett, etc.
+28. edu\s*$   or   edu[[:space:]]*$
+
+--- PART D ---
+
+29. sed -E 's/[aeiou]/V/g' data/roster.txt
+    BrVwn,JVV 123456789 jbrVwn@wVsc.VdV
+    etc.
+
+30. sed -E 's/[0-9]{9}/XXXXXXXXX/g' data/roster.txt
+
+31. sed -E 's/([a-zA-Z]+),([a-zA-Z]+) +([0-9]{9}) ([a-z]+)@wisc.edu.*/\2,\1,\4,\3/' data/roster.txt
+
+    Output:
+    Joe,Brown,jbrown,123456789
+    Sally,Roukos,sroukos,456789123
+    Jean,Chen,chen,789123456
+    Jack,Juniper,jjuniper,345678912
+
+    Capture groups:
+    \1 = last name    \2 = first name
+    \3 = 9-digit ID   \4 = NetID (part before @)
+
+--- PART E ---
+
+32. Differences between bash [[ =~ ]] and emacs regex:
+    - Bash uses () for groups;  emacs uses \(...\)
+    - Bash uses {} for quantifiers; emacs uses \{...\}
+    - Bash stores matches in BASH_REMATCH array
+    - Emacs uses \1 \2 etc. for backreferences in replacements
+    - Bash regex should be stored in a variable to avoid quoting issues
+
+33. Output:
+    2024
+    report
+    BASH_REMATCH[0] = "file-2024-report.txt" (whole match)
+    BASH_REMATCH[1] = "2024" (first capture group)
+    BASH_REMATCH[2] = "report" (second capture group)
+
+--- PART F ---
+
+34. *.csv         any filename ending in .csv
+    file?.txt     "file" + any ONE char + ".txt"
+    [abc]*        any filename starting with a, b, or c
+    [!0-9]*       any filename NOT starting with a digit
+    *[[:digit:]]* any filename containing a digit
+
+35. Glob * = "match any string of characters" (for filenames)
+    Regex * = "match zero or more of the PREVIOUS expression"
+
+    ls *.csv uses glob: "any filename ending in .csv"
+    In regex, *.csv would mean "zero or more of nothing, then .csv"
+    which is meaningless. Regex equivalent would be: .*\.csv
+
+    GLOBS are for filenames (ls, cp, mv, rm).
+    REGEX is for text content (grep, sed, emacs search).

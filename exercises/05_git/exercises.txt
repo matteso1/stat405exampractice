@@ -1,0 +1,131 @@
+======================================================================
+  EXERCISE 5: Git & Version Control
+  Do these for real - init a repo, make commits, branch, merge.
+======================================================================
+
+--- PART A: Flashcards (say the answer out loud) ---
+
+1.  What are the 4 states a file can be in within git?
+
+2.  What does each command do?
+    git init
+    git add <file>
+    git commit -m "msg"
+    git status
+    git log
+    git diff
+    git branch
+    git checkout <branch>
+    git checkout -b <branch>
+    git merge <branch>
+    git clone <repo>
+    git pull origin main
+    git push origin main
+
+3.  What is the typical git workflow? (4 commands in order)
+
+4.  What does git branch -M main do?
+
+5.  What does git checkout -b fun do differently from
+    git checkout fun?
+
+
+--- PART B: Hands-On Git Practice ---
+
+Do this entire exercise on your VPS.
+
+6.  Create a new directory ~/git_practice and initialize
+    a git repository in it.
+
+7.  Create a file called names.txt with this content:
+      boss,yourname,YourLastName,YourFirstName
+
+8.  Stage the file and check git status. What does it say?
+
+9.  Commit with the message "Create names.txt with boss line"
+    Then rename the branch to main: git branch -M main
+
+10. Check git log. What do you see?
+
+11. Modify names.txt - add a second line:
+      employee,emp001,Smith,Jane
+
+12. Run git diff. What does it show?
+
+13. Stage and commit with message "Add employee line"
+
+14. Check git log --pretty=oneline. You should see 2 commits.
+
+
+--- PART C: Branching & Merging ---
+
+15. Create a new branch called "add-header" and switch to it:
+    git checkout -b add-header
+
+16. Add a header line to the TOP of names.txt:
+      role,id,LastName,FirstName
+
+17. Stage and commit: "Add header to names.txt"
+
+18. Switch back to main: git checkout main
+    Cat names.txt - the header should be GONE (it's on the branch!)
+
+19. Merge add-header into main:
+    git merge add-header -m "Merge header into main"
+
+20. Cat names.txt - now it should have the header!
+    Delete the branch: git branch -d add-header
+
+
+--- PART D: Merge Conflicts ---
+
+21. Create a branch called "drink":
+    git checkout -b drink
+
+22. Add a 4th column "milk" to the employee line, making it:
+      employee,emp001,Smith,Jane,milk
+    Stage and commit: "Add drink column from drink branch"
+
+23. Switch back to main: git checkout main
+
+24. Add a 4th column "soda" to the employee line, making it:
+      employee,emp001,Smith,Jane,soda
+    Stage and commit: "Add drink column from main"
+
+25. Now try: git merge drink -m "merge drink"
+    You should get a CONFLICT!
+
+26. Open names.txt - you'll see conflict markers:
+    <<<<<<< HEAD
+    ... main's version ...
+    =======
+    ... drink's version ...
+    >>>>>>> drink
+
+    Edit the file to keep the version you want (pick one).
+    Remove ALL conflict markers.
+
+27. Stage the resolved file and commit:
+    git add names.txt
+    git commit -m "Resolve drink conflict, kept soda"
+    git branch -d drink
+
+
+--- PART E: Conceptual Questions (likely on exam) ---
+
+28. What's the difference between git add and git commit?
+
+29. Why do you git pull before git push?
+
+30. What does .git directory contain?
+
+31. What goes in a .gitignore file? Why use it?
+
+32. What do ssh-keygen and SSH keys do for GitHub?
+
+33. If you run git checkout <file>, what happens?
+    Why is this potentially dangerous?
+
+======================================================================
+  When done:  cat answers.txt
+======================================================================

@@ -1,0 +1,117 @@
+======================================================================
+  EXERCISE 2: Pipelines, Redirection & Text Processing
+  This is the MOST LIKELY topic for exam questions.
+  Work through these on the command line.
+======================================================================
+
+--- PART A: Pipelines (A | B) ---
+
+A pipeline makes the output of A the input of B.
+
+1.  Count how many FILES are in ~/exam_practice/data/
+    Use: ls and wc in a pipeline.
+
+2.  Using data/mtcars.csv, skip the header and sort by the
+    3rd field (cyl), numerically, in DESCENDING order.
+    HINT: tail, sort with -t ',' -k 3 -n -r
+
+3.  From data/fruits.csv, extract ONLY the "name" column
+    (the first field, comma-separated).
+    HINT: tail to skip header, cut with -d ',' -f 1
+
+4.  From data/fruits.csv, find the fruit with the highest count.
+    Pipeline: skip header -> sort by field 2 numerically descending -> take first line
+    HINT: tail | sort | head
+
+5.  From data/a3.txt, sort the lines, then count unique lines.
+    HINT: cat | sort | uniq -c
+
+6.  From data/mtcars.csv, select only rows where am == 1
+    (field 10 equals "1"), using awk.
+    HINT: cat data/mtcars.csv | awk -F ',' '{ if ($10 == "1") {print $0} }'
+
+7.  Count how many cars have 8 cylinders (field 3 = "8").
+    Pipeline: cat -> awk to filter -> wc -l
+
+
+--- PART B: Redirection ---
+
+8.  What are the THREE standard I/O streams and their
+    file descriptor numbers? Say them out loud, then check.
+
+9.  Write the output of "ls data/" to a file called listing.txt
+    using >. Then check its contents with cat.
+
+10. APPEND the text "--- end of listing ---" to listing.txt
+    using >>. Check with cat.
+
+11. What's the difference between > and >> ?
+
+12. Run a command that DOES NOT EXIST, like "fakecmd".
+    Redirect its error message to a file called errors.txt
+    HINT: fakecmd 2> errors.txt
+
+13. Run: echo "This is an error message" 1>&2
+    What does 1>&2 do? Why would you use it in a script?
+
+14. Use a here string (<<<) to calculate pi with bc:
+    HINT: bc -l <<< "4 * a(1)"
+
+15. Try discarding output:
+    ls data/ > /dev/null
+    What happened? Why would you use /dev/null?
+
+
+--- PART C: Text Processing Deep Dive ---
+
+16. Using data/students.txt and a while read loop, print each
+    student's name and major:
+      while read name height weight major; do
+        echo "$name studies $major"
+      done < data/students.txt
+    Run it. What happens to the header line?
+
+17. From data/mtcars.csv, use cut to extract the weight column
+    (field 7, comma-separated). Skip the header.
+
+18. Use sed to replace every "awestruck" with "lovestruck" in
+    data/a3.txt (just print to screen, don't modify the file).
+
+19. Using data/emails.txt, extract just the email addresses
+    (first field, space-separated).
+    HINT: cut -d ' ' -f 1
+
+20. Using data/emails.txt, count how many are "active" vs "inactive".
+    HINT: pipeline with cut, sort, uniq -c
+
+21. COMPOUND EXPRESSION CHALLENGE:
+    Using data/fruits.csv, compute the sum of the "count" column.
+    Pipeline: skip header | cut field 2 | pipe to brace expression
+    that uses a while read loop to accumulate a sum.
+
+    HINT skeleton:
+    tail -n +2 data/fruits.csv | cut -d ',' -f 2 | {
+      sum=0
+      while read n; do
+        sum=$(($sum + $n))
+      done
+      echo "Total: $sum"
+    }
+
+
+--- PART D: sort deep dive ---
+
+22. Sort data/fruits.csv (skip header) by price (field 3)
+    in ascending numeric order.
+
+23. Sort data/fruits.csv (skip header) by name alphabetically.
+
+24. What does sort do WITHOUT -n? Try sorting numbers
+    without -n and see what goes wrong:
+    echo -e "9\n10\n2\n100" | sort
+    echo -e "9\n10\n2\n100" | sort -n
+    What's the difference?
+
+======================================================================
+  When done:  cat answers.txt
+======================================================================

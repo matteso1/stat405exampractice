@@ -1,0 +1,229 @@
+======================================================================
+  EXERCISE 3: Shell Scripting
+  Write ACTUAL scripts. Run them. Debug them.
+  This is where exam questions will hit hardest.
+======================================================================
+
+--- PART A: Variables & Quoting ---
+
+First, try these DIRECTLY at the command line (no script needed):
+
+1.  Predict the output of each, then run it to check:
+
+    a=hello
+    echo $a
+
+    b="hello world"
+    echo $b
+
+    c=3
+    echo $c
+
+    d=$c
+    echo "d is $d"
+
+    e=$(($c * $c))
+    echo $e
+
+    f=$(ls -1 ~/exam_practice/data | wc -l)
+    echo "there are $f files"
+
+2.  QUOTING CHALLENGE - predict output FIRST, then run:
+
+    x=42
+    echo "The answer is $x"
+    echo 'The answer is $x'
+    echo "Files: $(ls ~/exam_practice/data)"
+    echo 'Files: $(ls ~/exam_practice/data)'
+    echo cost=\$5.00
+    echo "math: $((2 + 2))"
+    echo 'math: $((2 + 2))'
+
+3.  STRING APPEND:
+    g="hello"
+    g+=" world"
+    echo $g
+
+4.  BRACE EXPANSION - predict then run:
+    echo {A,B,C}_{1,2}
+    echo file{1..5}.txt
+    echo {Mon,Tue,Wed,Thu,Fri}_morning
+
+
+--- PART B: Write Scripts ---
+
+For each script below, create the file, add #!/bin/bash as line 1,
+make it executable (chmod u+x), and run it.
+
+5.  Write "greet.sh" that prints "Hello, World."
+    (The classic first script.)
+
+6.  Write "repeat.sh" that takes two arguments: <word> and <n>
+    and prints <word> exactly <n> times, one per line.
+
+    - If the user gives the wrong number of arguments,
+      print a usage message to STDERR and exit.
+    - Use $# to check argument count.
+    - Use seq in a for loop.
+
+    Test:
+      ./repeat.sh hello 3       (prints hello 3 times)
+      ./repeat.sh               (prints usage to stderr)
+      ./repeat.sh a b c         (prints usage to stderr)
+
+7.  Write "check_even.sh" that takes one integer argument and
+    prints "even" or "odd".
+    HINT: Use $(( $1 % 2 )) to get the remainder.
+    Don't forget the usage check!
+
+    Test:
+      ./check_even.sh 4         # even
+      ./check_even.sh 7         # odd
+      ./check_even.sh           # usage message
+
+8.  Write "countdown.sh" that takes one integer argument and
+    counts down to 1 using a while loop.
+
+    Test:
+      ./countdown.sh 5
+    Output:
+      5
+      4
+      3
+      2
+      1
+
+
+--- PART C: Conditionals & Loops (CRITICAL for exam) ---
+
+9.  PREDICT the output, then verify at the command line:
+
+    x=3
+    name="Philip"
+    if [[ ($x -eq 3) && ($name == "Philip") ]]; then
+      echo "match"
+    else
+      echo "no match"
+    fi
+
+10. What about this one? (change x to 4)
+
+    x=4
+    name="Philip"
+    if [[ ($x -eq 3) && ($name == "Philip") ]]; then
+      echo "match"
+    else
+      echo "no match"
+    fi
+
+11. Write "fizzbuzz.sh" that loops from 1 to 20:
+    - If divisible by 3 AND 5, print "FizzBuzz"
+    - If divisible by 3 only, print "Fizz"
+    - If divisible by 5 only, print "Buzz"
+    - Otherwise print the number
+
+12. Write "sum_range.sh <start> <end>" that prints the sum
+    of all integers from start to end inclusive.
+    Use a for loop with $(seq $1 $2).
+
+    Test: ./sum_range.sh 1 10    # should print 55
+
+13. Write "digits.sh" (from the actual class exercise!)
+    Find the sum of numbers between 1000 and 2000 (inclusive)
+    that have digits ONLY from the set {0, 1}.
+
+    HINT: loop through {1000..2000}, use [[ $n =~ pattern ]]
+    to check if all digits are 0 or 1.
+
+    The numbers are: 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
+    Sum = 8432
+
+
+--- PART D: Functions ---
+
+14. Write a function called "add" that takes two arguments
+    and echoes their sum. Then capture the result:
+
+    function add {
+      local a=$1
+      local b=$2
+      echo $(($a + $b))
+    }
+    result=$(add 10 25)
+    echo "result = $result"
+
+15. Write a function "max_of_three" that takes 3 integers and
+    echoes the largest. Use if/elif.
+
+16. WHY does this function use "1>&2" for the debug line?
+
+    function compute {
+      local x=$1
+      echo "debug: computing with x=$x" 1>&2  # <-- why?
+      echo $(($x * $x))
+    }
+    answer=$(compute 5)
+    echo "answer=$answer"
+
+    Run it. What prints to screen? What goes into $answer?
+
+
+--- PART E: Regex in Bash ---
+
+17. PREDICT: does this match? Then test it.
+
+    file="NetID.cxx"
+    pattern="(.*).cxx"
+    if [[ $file =~ $pattern ]]; then
+      echo "Match: ${BASH_REMATCH[1]}"
+    else
+      echo "No match"
+    fi
+
+18. Write a script "validate.sh" that checks if $1 is a valid
+    email address (simple check: something@something.something).
+    Use =~ with a regex pattern.
+
+19. IDENTIFY THE BUGS (3 bugs total):
+
+    x =3
+    if [[$x -eq 3 ]]; then
+      echo "three"
+    fi
+
+    Fix all three. (VERY likely exam question style)
+
+
+--- PART F: Compound Expressions & While Read ---
+
+20. Run this and understand every part:
+
+    echo "1 2 3" | sed 's/ /\n/g' | {
+      sum=0
+      while read n; do
+        sum=$(($sum + $n))
+      done
+      echo $sum
+    }
+
+    What does sed 's/ /\n/g' do?
+    Why are the braces needed?
+    Why is the space in "{ " required?
+
+21. Write "mean.sh <column> [file.csv]" that computes the mean
+    of a numeric column in a CSV file. If no file given, read
+    from stdin.
+
+    HINT from class:
+    - Use cut -d ',' -f $col to get the column
+    - Use tail -n +2 to skip the header
+    - Pipe to { sum=0; n=0; while read val; do ... done; echo ... }
+    - For no file: set file=/dev/stdin
+
+    Test:
+      ./mean.sh 2 ~/exam_practice/data/fruits.csv
+      cat ~/exam_practice/data/fruits.csv | ./mean.sh 2
+
+======================================================================
+  When done:  cat answers.txt
+======================================================================

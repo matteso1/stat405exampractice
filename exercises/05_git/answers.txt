@@ -1,0 +1,64 @@
+======================================================================
+  ANSWERS: Exercise 5 - Git
+======================================================================
+
+1.  Four states: untracked, modified, staged, committed
+    untracked -> git add -> staged -> git commit -> committed
+    committed -> (edit) -> modified -> git add -> staged -> ...
+
+2.  git init              create new repo (.git directory)
+    git add <file>        stage file for next commit
+    git commit -m "msg"   save snapshot of staged files
+    git status            show current state (branch, changes)
+    git log               show commit history with hashes
+    git diff              show uncommitted changes
+    git branch            list branches (* marks current)
+    git checkout <branch> switch to existing branch
+    git checkout -b <br>  CREATE new branch AND switch to it
+    git merge <branch>    merge branch into current branch
+    git clone <repo>      copy remote repo to local machine
+    git pull origin main  download + merge from GitHub
+    git push origin main  upload local commits to GitHub
+
+3.  git add -> git commit -> git pull -> git push
+
+4.  Renames the current branch from "master" to "main"
+    (git's default name vs GitHub's default name)
+
+5.  git checkout -b fun   CREATES the branch "fun" then switches to it
+    git checkout fun      just SWITCHES to existing branch "fun"
+    (The -b flag means "create new branch")
+
+--- PARTS B, C, D are hands-on; verify by running the commands ---
+
+28. git add stages files (marks them to be included in next snapshot)
+    git commit saves the snapshot to the repository
+    You can add files incrementally, then commit them all at once.
+    Think: add = "put on the stage", commit = "take the photo"
+
+29. Someone else may have pushed changes while you were working.
+    git pull downloads their changes and merges them with yours.
+    If you push without pulling first, you might overwrite their work
+    or get a rejection error from GitHub.
+
+30. .git contains the entire version control repository:
+    all snapshots (commits), branches, configuration, history.
+    It's created by git init. It's hidden (starts with .).
+    You can see it with ls -a.
+
+31. .gitignore lists files/patterns that git should NOT track.
+    Examples: large data files, compiled binaries, .env files.
+    e.g. put "Property_Tax_Roll.csv" in .gitignore to stop
+    git from complaining about that 138 MB untracked file.
+
+32. ssh-keygen creates a public/private key pair:
+    ~/.ssh/id_rsa.pub = public key (give to GitHub)
+    ~/.ssh/id_rsa = private key (keep secret)
+    This lets you git push/pull without typing your password
+    every time. GitHub encrypts with your public key, only your
+    private key can decrypt it.
+
+33. git checkout <file> retrieves the last committed version,
+    OVERWRITING any changes you've made to the file.
+    It's dangerous because your uncommitted changes are LOST
+    permanently - there's no undo for this operation.

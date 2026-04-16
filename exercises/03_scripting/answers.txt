@@ -1,0 +1,192 @@
+======================================================================
+  ANSWERS: Exercise 3 - Shell Scripting
+======================================================================
+
+1.  a=hello          -> echo prints: hello
+    b="hello world"  -> echo prints: hello world
+    c=3              -> echo prints: 3
+    d=$c             -> echo prints: d is 3
+    e=$((3*3))       -> echo prints: 9
+    f=$(...)         -> echo prints: there are N files
+
+2.  QUOTING:
+    echo "The answer is $x"           ->  The answer is 42
+    echo 'The answer is $x'           ->  The answer is $x
+    echo "Files: $(ls ...)"           ->  Files: a3.txt emails.txt ...
+    echo 'Files: $(ls ...)'           ->  Files: $(ls ~/exam_practice/data)
+    echo cost=\$5.00                  ->  cost=$5.00
+    echo "math: $((2 + 2))"          ->  math: 4
+    echo 'math: $((2 + 2))'          ->  math: $((2 + 2))
+
+    RULE: Double quotes expand $, $(), $(()). Single quotes expand NOTHING.
+
+3.  Prints: hello world
+
+4.  {A,B,C}_{1,2}        -> A_1 A_2 B_1 B_2 C_1 C_2
+    file{1..5}.txt        -> file1.txt file2.txt file3.txt file4.txt file5.txt
+    {Mon,...,Fri}_morning  -> Mon_morning Tue_morning Wed_morning Thu_morning Fri_morning
+
+--- SCRIPTS ---
+
+5.  #!/bin/bash
+    echo 'Hello, World.'
+
+6.  #!/bin/bash
+    if [[ $# -ne 2 ]]; then
+      echo "usage: $0 <word> <n>" 1>&2
+      exit 0
+    fi
+    word=$1
+    n=$2
+    for i in $(seq $n); do
+      echo $word
+    done
+
+7.  #!/bin/bash
+    if [[ $# -ne 1 ]]; then
+      echo "usage: $0 <integer>" 1>&2
+      exit 0
+    fi
+    if [[ $(($1 % 2)) -eq 0 ]]; then
+      echo "even"
+    else
+      echo "odd"
+    fi
+
+8.  #!/bin/bash
+    if [[ $# -ne 1 ]]; then
+      echo "usage: $0 <n>" 1>&2
+      exit 0
+    fi
+    x=$1
+    while [[ $x -ge 1 ]]; do
+      echo $x
+      x=$(($x - 1))
+    done
+
+--- CONDITIONALS & LOOPS ---
+
+9.  Prints: match   (both conditions are true)
+
+10. Prints: no match   (x is 4, not 3, so && fails)
+
+11. #!/bin/bash
+    for i in $(seq 1 20); do
+      if [[ $(($i % 15)) -eq 0 ]]; then
+        echo "FizzBuzz"
+      elif [[ $(($i % 3)) -eq 0 ]]; then
+        echo "Fizz"
+      elif [[ $(($i % 5)) -eq 0 ]]; then
+        echo "Buzz"
+      else
+        echo $i
+      fi
+    done
+
+12. #!/bin/bash
+    if [[ $# -ne 2 ]]; then
+      echo "usage: $0 <start> <end>" 1>&2
+      exit 0
+    fi
+    sum=0
+    for i in $(seq $1 $2); do
+      sum=$(($sum + $i))
+    done
+    echo $sum
+
+13. #!/bin/bash
+    sum=0
+    pattern="^[01]+$"
+    for n in {1000..2000}; do
+      if [[ $n =~ $pattern ]]; then
+        sum=$(($sum + $n))
+      fi
+    done
+    echo $sum
+    # Answer: 8432
+    # Numbers: 1000 1001 1010 1011 1100 1101 1110 1111
+
+--- FUNCTIONS ---
+
+14. result = 35
+
+15. function max_of_three {
+      local a=$1
+      local b=$2
+      local c=$3
+      local max=$a
+      if [[ $b -gt $max ]]; then max=$b; fi
+      if [[ $c -gt $max ]]; then max=$c; fi
+      echo $max
+    }
+    result=$(max_of_three 5 12 8)
+    echo $result   # 12
+
+16. The 1>&2 sends the debug message to STDERR, not STDOUT.
+    When you do answer=$(compute 5):
+      - "debug: computing with x=5" prints to SCREEN (stderr)
+      - "25" goes into $answer (stdout)
+    If the debug line went to stdout, $answer would be
+    "debug: computing with x=5\n25" which breaks everything.
+    RULE: Functions "return" via echo to stdout.
+          Debug/error messages go to stderr via 1>&2.
+
+--- REGEX ---
+
+17. Match: NetID
+    BASH_REMATCH[0] = "NetID.cxx" (full match)
+    BASH_REMATCH[1] = "NetID" (first group capture)
+
+18. #!/bin/bash
+    if [[ $# -ne 1 ]]; then
+      echo "usage: $0 <email>" 1>&2
+      exit 0
+    fi
+    pattern="^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+$"
+    if [[ $1 =~ $pattern ]]; then
+      echo "valid"
+    else
+      echo "invalid"
+    fi
+
+19. THREE BUGS:
+    Bug 1: x =3       -> spaces around = -> fix: x=3
+    Bug 2: [[$x       -> missing space after [[ -> fix: [[ $x
+    Bug 3: 3 ]]       -> missing space before ]] -> fix: 3 ]]
+
+    Fixed:
+    x=3
+    if [[ $x -eq 3 ]]; then
+      echo "three"
+    fi
+
+--- COMPOUND & WHILE READ ---
+
+20. sed 's/ /\n/g' replaces every space with a newline,
+    turning "1 2 3" into three separate lines.
+    Braces { } group commands into a compound expression
+    so they share the same stdin from the pipe.
+    The space after "{" is required by bash syntax.
+    The ";" before "}" is required by bash syntax.
+    Answer: 6
+
+21. #!/bin/bash
+    if [[ $# -lt 1 ]]; then
+      echo "usage: $0 <column> [file.csv]" 1>&2
+      exit 0
+    fi
+    col=$1
+    if [[ $# -ge 2 ]]; then
+      file=$2
+    else
+      file=/dev/stdin
+    fi
+    cut -d ',' -f $col $file | tail -n +2 | {
+      sum=0
+      n=0
+      while read val; do
+        sum=$(echo "scale=6; $sum + $val" | bc)
+        n=$(($n + 1))
+      done
+      echo "scale=2; $sum / $n" | bc
+    }

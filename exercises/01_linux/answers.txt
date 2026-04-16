@@ -1,0 +1,66 @@
+======================================================================
+  ANSWERS: Exercise 1 - Linux Basics
+======================================================================
+
+1.  mkdir -p practice/alpha/sub1 practice/alpha/sub2 practice/beta practice/gamma
+    (The -p flag creates parent directories as needed)
+
+2.  echo "Hello from sub1" > practice/alpha/sub1/hello.txt
+
+3.  cp practice/alpha/sub1/hello.txt practice/beta/
+
+4.  mv practice/beta/hello.txt practice/beta/greeting.txt
+
+5.  ~         your home directory (/home/yourusername)
+    .         current directory
+    ..        parent directory
+    ~jgillett  jgillett's home directory
+
+6.  -l  long format (permissions, owner, size, date, name)
+    -t  sort by modification time (newest first)
+    -r  reverse the sort order
+    So -ltr = long format, oldest first
+
+7.  tar -cvf practice.tar practice/
+    rm -r practice/
+    tar -xvf practice.tar
+    ls practice/alpha/sub1/hello.txt   # verify
+
+8.  wc data/mtcars.csv
+    (33 lines, 33 words, 1284 characters -- numbers may vary slightly)
+
+9.  head -n 3 data/mtcars.csv
+
+10. tail -n 3 data/mtcars.csv
+
+11. tail -n +2 data/mtcars.csv
+
+12. cp data/fruits.csv data/fruits_v2.csv
+    # edit fruits_v2.csv (use sed or a text editor)
+    sed -i 's/cherry,100,3.00/cherry,200,3.50/' data/fruits_v2.csv
+    diff data/fruits.csv data/fruits_v2.csv
+
+13. chmod u-x setup.sh       # remove execute
+    ls -l setup.sh            # note: no 'x' in user permissions
+    chmod u+x setup.sh        # add it back
+    "u+x" = give the User eXecute permission
+
+14. find ~/exam_practice/ -name "*.csv"
+
+15. find ~/exam_practice/data/ -name "*.txt" -exec cat {} ";" -print
+
+16. grep "wisc" data/emails.txt
+
+17. grep -r "wisc" ~/exam_practice/data/
+
+18. ssh user@hostname
+
+19. wget URL
+
+20. scp = "secure copy" - copies files BETWEEN machines (local<->remote)
+    cp = copies files on the SAME machine
+    scp [[user@]host:]file1 [[user@]host2:]file2
+
+21. man displays the manual page for a command.
+    ls -a  shows ALL files including hidden ones (starting with .)
+    ls -h  shows file sizes in human-readable format (KB, MB, GB)

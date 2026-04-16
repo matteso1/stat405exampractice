@@ -1,0 +1,146 @@
+======================================================================
+  MOCK EXAM - STAT 405/605
+  50 points, 75 minutes, closed book
+  Simulate real conditions: pen and paper, no computer!
+======================================================================
+
+Print this out (or just read questions and write answers on paper).
+Then check against mock_exam_answers.txt.
+
+----------------------------------------------------------------------
+SECTION 1: Linux Commands (12 points)
+----------------------------------------------------------------------
+
+Q1 (2 pts): What does each command do?
+  (a) tail -n +2 data.csv
+  (b) chmod u+x script.sh
+
+Q2 (2 pts): Write a single command to:
+  (a) Find all .sh files under your home directory
+  (b) Download a file from https://example.com/data.tar
+
+Q3 (3 pts): Given mtcars.csv (with header), write a pipeline that:
+  - skips the header
+  - sorts by the 7th field (weight), comma-separated, numerically
+  - prints only the first 3 lines (lightest 3 cars)
+
+Q4 (2 pts): What is the output of:
+  cat mtcars.csv | cut -d ',' -f 2 | tail -n +2 | head -n 3
+
+Q5 (3 pts): Name the three standard I/O streams, their file
+  descriptor numbers, and explain what 1>&2 does.
+
+----------------------------------------------------------------------
+SECTION 2: Shell Scripting (18 points)
+----------------------------------------------------------------------
+
+Q6 (2 pts): This script has 3 bugs. Find and fix all of them:
+
+  #!/bin/bash
+  x = 10
+  if [[$x -gt 5]]; then
+    echo "big"
+  fi
+
+Q7 (3 pts): What is the output of this script?
+
+  #!/bin/bash
+  a="hello"
+  b=3
+  echo "a=$a, b=$b, sum=$((b + 2))"
+  echo 'a=$a, b=$b'
+  echo "files=$(echo *.txt)"
+
+Q8 (4 pts): Write a complete script "rm_big.sh" that:
+  - Takes two arguments: <directory> <max_bytes>
+  - Removes all files in <directory> larger than <max_bytes> bytes
+  - Prints a usage message to stderr if wrong number of arguments
+  - Uses find with -size and -type f
+
+Q9 (3 pts): What does this code print?
+
+  function mystery {
+    local x=$1
+    local y=$2
+    echo "processing $x and $y" 1>&2
+    echo $(($x + $y))
+  }
+  result=$(mystery 10 20)
+  echo "result=$result"
+
+Q10 (3 pts): Fill in the blanks to make this while read loop
+  compute the sum of the "count" column (field 2) of fruits.csv:
+
+  tail -n +2 fruits.csv | cut -d ',' -f ___ | {
+    ___=0
+    while ___ val; do
+      sum=$(($sum + ___))
+    done
+    echo $sum
+  }
+
+Q11 (3 pts): Write a for loop that prints the numbers from
+  1 to $1 (a command-line argument), each on its own line.
+  Include a usage check.
+
+----------------------------------------------------------------------
+SECTION 3: Regular Expressions (8 points)
+----------------------------------------------------------------------
+
+Given this data:
+  Brown,Joe 123456789 jbrown@wisc.edu 1000
+  Roukos,Sally 456789123 sroukos@wisc.edu 5000
+  Chen,Jean 789123456 chen@wisc.edu 24000
+
+Q12 (1 pt each): What does each regex match in the data above?
+  (a) [0-9]{4}
+  (b) ^[A-Z]
+  (c) \.$
+  (d) [aeiou]{2}
+
+Q13 (2 pts): In bash, given:
+  file="report-2024.csv"
+  pattern="(.*)-([0-9]+)\.csv"
+  if [[ $file =~ $pattern ]]; then
+    echo ${BASH_REMATCH[1]}
+    echo ${BASH_REMATCH[2]}
+  fi
+
+  What is printed?
+
+Q14 (2 pts): What is the difference between glob pattern *
+  and regex * ? Give an example of each in use.
+
+----------------------------------------------------------------------
+SECTION 4: Git (6 points)
+----------------------------------------------------------------------
+
+Q15 (2 pts): Put these git file states in order of the
+  typical workflow:  committed, staged, modified, untracked
+
+Q16 (2 pts): What is the difference between:
+  (a) git checkout fun
+  (b) git checkout -b fun
+
+Q17 (2 pts): You and a teammate both edit the same line of
+  names.txt. You commit and push. Then your teammate tries to
+  push and gets an error. Describe the steps to resolve this.
+
+----------------------------------------------------------------------
+SECTION 5: HPC / Distributed Computing (6 points)
+----------------------------------------------------------------------
+
+Q18 (3 pts): Fill in the Slurm command for each action:
+  (a) Submit a job:          ___________
+  (b) Check your queue:      ___________
+  (c) Run 22 parallel jobs:  ___________
+
+Q19 (3 pts): Fill in the HTCondor command for each action:
+  (a) Submit a job:          ___________
+  (b) Check your queue:      ___________
+  (c) Cancel all your jobs:  ___________
+
+======================================================================
+  Total: 50 points
+  When done, check: cat mock_exam_answers.txt
+======================================================================

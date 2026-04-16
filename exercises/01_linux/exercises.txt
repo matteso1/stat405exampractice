@@ -1,0 +1,91 @@
+======================================================================
+  EXERCISE 1: Linux Basics & File Operations
+  Work through these IN ORDER on the command line.
+  Try each one BEFORE looking at answers.txt
+======================================================================
+
+--- PART A: Directories & Navigation ---
+
+1.  Make this directory hierarchy (from ~/exam_practice/):
+      practice/
+        alpha/
+          sub1/
+          sub2/
+        beta/
+        gamma/
+    Use ONLY mkdir. Try to do it in as few commands as possible.
+
+2.  From ~/exam_practice/, WITHOUT using cd, write a file called
+    "hello.txt" in practice/alpha/sub1/ containing the text:
+      Hello from sub1
+
+3.  From ~/exam_practice/, WITHOUT using cd, copy hello.txt
+    from practice/alpha/sub1/ to practice/beta/
+
+4.  WITHOUT using cd, rename practice/beta/hello.txt to
+    practice/beta/greeting.txt
+
+5.  What does each shorthand mean? Say them out loud:
+      ~       .       ..      ~jgillett
+
+6.  Run: ls -ltr data/
+    What do the -l, -t, and -r flags each do?
+
+7.  Create a tar archive of the practice/ directory:
+      practice.tar
+    Then delete the practice/ directory.
+    Then extract practice/ back from the tar file.
+    Verify everything is still there.
+
+
+--- PART B: File Inspection ---
+
+8.  How many lines, words, and characters are in data/mtcars.csv?
+    (one command)
+
+9.  Print ONLY the first 3 lines of data/mtcars.csv
+
+10. Print ONLY the last 3 lines of data/mtcars.csv
+
+11. Print data/mtcars.csv starting from line 2 (skip the header).
+    HINT: tail -n +2
+
+12. What is the difference between these two files?
+    First, copy data/fruits.csv to data/fruits_v2.csv
+    Then change "cherry,100,3.00" to "cherry,200,3.50" in fruits_v2.csv
+    Use diff to see the difference.
+
+13. Use chmod to make setup.sh NOT executable by the user.
+    Verify with ls -l setup.sh.
+    Then make it executable again.
+    What does "u+x" mean in plain English?
+
+
+--- PART C: Finding Things ---
+
+14. Use find to locate ALL .csv files under ~/exam_practice/
+
+15. Use find to locate all .txt files AND print their contents.
+    HINT: -exec cat {} ";"
+
+16. Use grep to find all lines containing "wisc" in data/emails.txt
+
+17. Use grep to find all lines containing "wisc" in ALL files
+    under ~/exam_practice/data/
+    HINT: grep -r
+
+
+--- PART D: Permissions & Basics ---
+
+18. What command logs you into a remote machine?
+
+19. What command downloads a file from a URL?
+
+20. What does scp do? How is it different from cp?
+
+21. What is the man command for? Try: man ls
+    What do the -a and -h flags of ls do?
+
+======================================================================
+  When done, check:  cat answers.txt
+======================================================================

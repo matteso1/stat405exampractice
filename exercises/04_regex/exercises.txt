@@ -1,0 +1,122 @@
+======================================================================
+  EXERCISE 4: Regular Expressions
+  If you installed emacs: do these in emacs with C-M-s and
+  M-x query-replace-regexp. Otherwise use grep -E or sed -E.
+======================================================================
+
+Reference data (also at ~/exam_practice/data/roster.txt):
+  Brown,Joe 123456789 jbrown@wisc.edu
+  Roukos,Sally 456789123 sroukos@wisc.edu
+  Chen,Jean 789123456 chen@wisc.edu
+  Juniper,Jack 345678912 jjuniper@wisc.edu
+
+--- PART A: Read & Predict ---
+
+For each regex below, predict which parts of the data above
+it matches. Then test with:  grep -E 'PATTERN' data/roster.txt
+
+1.  wisc
+2.  .,
+3.  ^[A-Z]
+4.  [aeiou]
+5.  [^aeiou]
+6.  [0-9]{4}
+7.  @.*\.edu
+8.  ^J
+
+--- PART B: Emacs-style Regex Syntax ---
+
+What does each emacs regex element mean? (flashcard style)
+
+9.  .
+10. [...]
+11. [^...]
+12. ^
+13. $
+14. \<
+15. \>
+16. \{n\}
+17. \{n,m\}
+18. *
+19. +
+20. ?
+21. \|
+22. \(...\)
+23. \1
+
+--- PART C: Write the Regex ---
+
+Using data/roster.txt, write a regex to match:
+
+24. Lines that start with "C"
+
+25. Email addresses (the @wisc.edu part)
+
+26. Exactly 9 consecutive digits
+
+27. Two consecutive identical lowercase letters (like "ll" in Sally)
+    HINT for emacs: \([a-z]\)\1
+    HINT for grep: grep -E '([a-z])\1'
+
+28. Lines ending with "edu" followed by any amount of whitespace
+
+--- PART D: Search & Replace ---
+
+Do these with sed -E (or in emacs with M-x query-replace-regexp).
+Operate on data/roster.txt.
+
+29. Replace every vowel (a,e,i,o,u) with "V":
+    sed -E 's/[aeiou]/V/g' data/roster.txt
+
+30. Replace every 9-digit number with "XXXXXXXXX":
+    HINT: [0-9]{9}
+
+31. BIG ONE from lecture: Rearrange each line from
+      Last,First ID email
+    to
+      First,Last,NetID,ID
+
+    In emacs syntax the pattern is:
+      \([a-zA-Z]+\),\([a-zA-Z]+\) +\([0-9]\{9\}\) \([a-z]+\)@wisc.edu.*
+    replacement:
+      \2,\1,\4,\3
+
+    In sed -E syntax:
+      sed -E 's/([a-zA-Z]+),([a-zA-Z]+) +([0-9]{9}) ([a-z]+)@wisc.edu.*/\2,\1,\4,\3/'
+
+    Try it on data/roster.txt! Understand each capture group.
+
+--- PART E: Bash vs Emacs Regex ---
+
+32. What's different about regex in bash [[ =~ ]] vs emacs?
+    (Name at least 2 differences)
+
+33. In bash, given:
+      str="file-2024-report.txt"
+      pattern="file-([0-9]+)-(.+)\.txt"
+      if [[ $str =~ $pattern ]]; then
+        echo ${BASH_REMATCH[1]}
+        echo ${BASH_REMATCH[2]}
+      fi
+
+    What prints? (predict then test)
+
+--- PART F: Glob Patterns vs Regex ---
+
+34. These are GLOB patterns (for filenames), NOT regex.
+    What does each match?
+
+    *.csv
+    file?.txt
+    [abc]*
+    [!0-9]*
+    *[[:digit:]]*
+
+35. KEY DIFFERENCE: In globs, * means "any characters."
+    In regex, * means "zero or more of the previous expression."
+
+    Why does ls *.csv work but grep *.csv doesn't make sense?
+
+======================================================================
+  When done:  cat answers.txt
+======================================================================
